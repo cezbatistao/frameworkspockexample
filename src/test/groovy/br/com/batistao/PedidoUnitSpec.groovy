@@ -15,9 +15,7 @@ class PedidoUnitSpec extends Specification {
 
     def "Teste realizando um pedido para um determinado produto"() {
         given:
-        Produto sabaoEmPo = new Produto("OMO", "Sabão em Pó OMO Progress 1,8 kg", 26.79)
         Produto detergente = new Produto("Ype", "Detergente Líquido Ype Neutro 500 Ml", 1.99)
-        Produto esponja = new Produto("Scoth Brite", "Esponja Limpeza Scoth Brite 3M", 4.50)
 
         Cliente cliente = new Cliente("Carlos", new Date(), "cezbatistao@email.com.br")
 
@@ -39,7 +37,6 @@ class PedidoUnitSpec extends Specification {
 
     def "Teste realizando um pedido para dois produto distintos"() {
         given:
-        Produto sabaoEmPo = new Produto("OMO", "Sabão em Pó OMO Progress 1,8 kg", 26.79)
         Produto detergente = new Produto("Ype", "Detergente Líquido Ype Neutro 500 Ml", 1.99)
         Produto esponja = new Produto("Scoth Brite", "Esponja Limpeza Scoth Brite 3M", 4.50)
 
@@ -70,7 +67,6 @@ class PedidoUnitSpec extends Specification {
 
     def "Teste realizando um pedido para dois produto e depois comprando mais dos mesmos produtos"() {
         given:
-        Produto sabaoEmPo = new Produto("OMO", "Sabão em Pó OMO Progress 1,8 kg", 26.79)
         Produto detergente = new Produto("Ype", "Detergente Líquido Ype Neutro 500 Ml", 1.99)
         Produto esponja = new Produto("Scoth Brite", "Esponja Limpeza Scoth Brite 3M", 4.50)
 
@@ -118,8 +114,8 @@ class PedidoUnitSpec extends Specification {
 
         where:
         nome           | descricao                               | precoUnitario  | quantidade  | valorTotal
-        "Ype"          | "Detergente Líquido Ype Neutro 500 Ml"  | 1.99           | 3           | 5.97d
-        "OMO"          | "Sabão em Pó OMO Progress 1,8 kg"       | 26.79          | 2           | 53.58d
-        "Scoth Brite"  | "Esponja Limpeza Scoth Brite 3M"        | 4.50           | 3           | 13.5d
+        "Ype"          | "Detergente Líquido Ype Neutro 500 Ml"  | 1.99d          | 3           | 5.97d
+        "OMO"          | "Sabão em Pó OMO Progress 1,8 kg"       | 26.79d         | 2           | 53.58d
+        "Scoth Brite"  | "Esponja Limpeza Scoth Brite 3M"        | 4.50d          | 3           | 13.5d
     }
 }

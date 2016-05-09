@@ -63,7 +63,7 @@ public class DatabaseController {
     }
 
     @RequestMapping(value = "/compras/{email}", method = RequestMethod.GET)
-    public String comprar(@PathVariable String email) {
+    public String compras(@PathVariable String email) {
         System.out.println("Email do cliente: "+email);
         Cliente cliente = clienteRepository.findByEmail(email);
 

@@ -7,20 +7,25 @@ import br.com.batistao.model.Produto
 import br.com.batistao.repository.ClienteRepository
 import br.com.batistao.repository.PedidoRepository
 import br.com.batistao.repository.ProdutoRepository
+import org.apache.http.HttpStatus
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.IntegrationTest
 import org.springframework.boot.test.SpringApplicationContextLoader
 import org.springframework.test.context.ContextConfiguration
+import org.springframework.test.context.web.WebAppConfiguration
 import spock.lang.Specification
 
 import java.text.SimpleDateFormat
+
+import static com.jayway.restassured.RestAssured.when
 
 /**
  * Created by ceb on 05/05/16.
  */
 @IntegrationTest
+@WebAppConfiguration
 @ContextConfiguration(loader = SpringApplicationContextLoader, classes = DatabaseApplication)
-class PedidoIntegrationSpec extends Specification {
+class DatabaseControllerSpec extends Specification {
 
     @Autowired
     private ClienteRepository clienteRepository
@@ -31,7 +36,7 @@ class PedidoIntegrationSpec extends Specification {
     @Autowired
     private PedidoRepository pedidoRepository
 
-    def "Teste para salvar e recuperar o pedido"() {
+    def "Teste para salvar e recuperar o pedido pela API REST"() {
         given:
         Produto sabaoEmPo = new Produto("OMO", "Sabão em Pó OMO Progress 1,8 kg", 26.79)
         produtoRepository.save(sabaoEmPo)
@@ -43,28 +48,26 @@ class PedidoIntegrationSpec extends Specification {
         Cliente cliente = new Cliente("Carlos", new Date(), "cezbatistao@email.com.br")
         clienteRepository.save(cliente)
 
-        Pedido pedido = new Pedido(cliente)
-        pedido.comprar(detergente, 4)
-        pedido.comprar(esponja, 2)
+        int quantidade = 3
 
         when:
-        pedidoRepository.save(pedido)
+        when().post("/supermercado/comprar/${cliente.id}/${sabaoEmPo.id}/${quantidade}").then().statusCode(HttpStatus.SC_OK)
 
         then:
-        Pedido pedido1Salvo = pedidoRepository.findOneFetch(pedido.id)
+        List<Pedido> pedidos = pedidoRepository.findAllFetch()
+        assert pedidos.size() == 1
+
+        Pedido pedido = pedidos[0]
+
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy")
 
-        assert pedido1Salvo.valorTotal == 16.96d
-        assert sdf.format(pedido1Salvo.data) == sdf.format(new Date())
+        assert pedido.valorTotal == 80.37d
+        assert sdf.format(pedido.data) == sdf.format(new Date())
 
-        assert pedido1Salvo.itensPedido.size() == 2
+        assert pedido.itensPedido.size() == 1
 
-        assert pedido1Salvo.itensPedido.find { it.produto == detergente }.precoTotal == 7.96d
-        assert pedido1Salvo.itensPedido.find { it.produto == detergente }.precoUnitario == 1.99d
-        assert pedido1Salvo.itensPedido.find { it.produto == detergente }.quantidade == 4
-
-        assert pedido1Salvo.itensPedido.find { it.produto == esponja }.precoTotal == 9.00d
-        assert pedido1Salvo.itensPedido.find { it.produto == esponja }.precoUnitario == 4.50d
-        assert pedido1Salvo.itensPedido.find { it.produto == esponja }.quantidade == 2
+        assert pedido.itensPedido[0].precoTotal == 80.37d
+        assert pedido.itensPedido[0].precoUnitario == 26.79d
+        assert pedido.itensPedido[0].quantidade == quantidade
     }
 }
