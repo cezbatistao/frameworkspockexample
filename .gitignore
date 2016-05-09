@@ -1,0 +1,8 @@
+target
+build
+.idea
+*.log
+*.iml
+*.*~
+*/target
+*/build
