@@ -4,7 +4,7 @@ Exemplo escrevendo testes com _Framework Spock_
 
 Para iniciar basta executar o comando:
 ```bash
-mvn clean test -Dspring.profiles.active=test
+mvn clean test
 ```
 
 Para visualizar o relatório basta acessar a página geranda no diretório:
