@@ -8,8 +8,10 @@ import br.com.batistao.repository.ClienteRepository
 import br.com.batistao.repository.PedidoRepository
 import br.com.batistao.repository.ProdutoRepository
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.ConfigFileApplicationContextInitializer
 import org.springframework.boot.test.IntegrationTest
 import org.springframework.boot.test.SpringApplicationContextLoader
+import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.ContextConfiguration
 import spock.lang.Specification
 
@@ -18,8 +20,9 @@ import java.text.SimpleDateFormat
 /**
  * Created by ceb on 05/05/16.
  */
+@ActiveProfiles(profiles = "test")
 @IntegrationTest
-@ContextConfiguration(loader = SpringApplicationContextLoader, classes = DatabaseApplication)
+@ContextConfiguration(loader = SpringApplicationContextLoader, classes = DatabaseApplication, initializers = ConfigFileApplicationContextInitializer.class)
 class PedidoIntegrationSpec extends Specification {
 
     @Autowired
