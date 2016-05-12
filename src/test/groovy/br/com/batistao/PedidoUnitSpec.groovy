@@ -118,4 +118,59 @@ class PedidoUnitSpec extends Specification {
         "OMO"          | "Sabão em Pó OMO Progress 1,8 kg"       | 26.79d         | 2           | 53.58d
         "Scoth Brite"  | "Esponja Limpeza Scoth Brite 3M"        | 4.50d          | 3           | 13.5d
     }
+
+    def "Teste dois clientes realizando seus pedidos de compra"() {
+        given:
+        Produto sabaoEmPo = new Produto("OMO", "Sabão em Pó OMO Progress 1,8 kg", 26.79)
+        Produto detergente = new Produto("Ype", "Detergente Líquido Ype Neutro 500 Ml", 1.99)
+        Produto esponja = new Produto("Scoth Brite", "Esponja Limpeza Scoth Brite 3M", 4.50)
+
+        Cliente clienteCarlos = new Cliente("Carlos", new Date(), "carlos@email.com.br")
+        Cliente clienteEduardo = new Cliente("Eduardo", new Date(), "eduardo@email.com.br")
+
+        when:
+        Pedido pedidoClienteCarlos = new Pedido(clienteCarlos)
+        pedidoClienteCarlos.comprar(detergente, 4)
+        pedidoClienteCarlos.comprar(esponja, 2)
+
+        and:
+        Pedido pedidoClienteEduardo = new Pedido(clienteEduardo)
+        pedidoClienteEduardo.comprar(sabaoEmPo, 2)
+        pedidoClienteEduardo.comprar(detergente, 2)
+        pedidoClienteEduardo.comprar(esponja, 1)
+
+        then:
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy")
+
+        assert pedidoClienteCarlos.valorTotal == 16.96d
+        assert sdf.format(pedidoClienteCarlos.data) == sdf.format(new Date())
+
+        assert pedidoClienteCarlos.itensPedido.size() == 2
+
+        assert pedidoClienteCarlos.itensPedido.find { it.produto == detergente }.precoTotal == 7.96d
+        assert pedidoClienteCarlos.itensPedido.find { it.produto == detergente }.precoUnitario == 1.99d
+        assert pedidoClienteCarlos.itensPedido.find { it.produto == detergente }.quantidade == 4
+
+        assert pedidoClienteCarlos.itensPedido.find { it.produto == esponja }.precoTotal == 9.00d
+        assert pedidoClienteCarlos.itensPedido.find { it.produto == esponja }.precoUnitario == 4.50d
+        assert pedidoClienteCarlos.itensPedido.find { it.produto == esponja }.quantidade == 2
+
+        and:
+        assert pedidoClienteEduardo.valorTotal == 62.06d
+        assert sdf.format(pedidoClienteEduardo.data) == sdf.format(new Date())
+
+        assert pedidoClienteEduardo.itensPedido.size() == 3
+
+        assert pedidoClienteEduardo.itensPedido.find { it.produto == detergente }.precoTotal == 3.98d
+        assert pedidoClienteEduardo.itensPedido.find { it.produto == detergente }.precoUnitario == 1.99d
+        assert pedidoClienteEduardo.itensPedido.find { it.produto == detergente }.quantidade == 2
+
+        assert pedidoClienteEduardo.itensPedido.find { it.produto == sabaoEmPo }.precoTotal == 53.58d
+        assert pedidoClienteEduardo.itensPedido.find { it.produto == sabaoEmPo }.precoUnitario == 26.79d
+        assert pedidoClienteEduardo.itensPedido.find { it.produto == sabaoEmPo }.quantidade == 2
+
+        assert pedidoClienteEduardo.itensPedido.find { it.produto == esponja }.precoTotal == 4.50d
+        assert pedidoClienteEduardo.itensPedido.find { it.produto == esponja }.precoUnitario == 4.50d
+        assert pedidoClienteEduardo.itensPedido.find { it.produto == esponja }.quantidade == 1
+    }
 }
