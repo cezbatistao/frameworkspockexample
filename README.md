@@ -12,4 +12,4 @@ Para visualizar o relatório basta acessar a página geranda no diretório:
 $WORKSPACE_HOME/frameworkspockexample/build/spock-reports/index.html
 ```
 
-Para mais detalhes verificar artigo: Testes automatizados com Framework Spock
+Para mais detalhes verificar artigo: [Testes automatizados com Framework Spock](https://cezbatistao.wordpress.com/2016/05/12/testes-automatizados-com-framework-spock/)
