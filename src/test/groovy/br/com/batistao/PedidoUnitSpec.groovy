@@ -120,7 +120,7 @@ class PedidoUnitSpec extends Specification {
     }
 
     def "Teste dois clientes realizando seus pedidos de compra"() {
-        given:
+        given: "que eu tenha os produtos e os clientes já cadastrados"
         Produto sabaoEmPo = new Produto("OMO", "Sabão em Pó OMO Progress 1,8 kg", 26.79)
         Produto detergente = new Produto("Ype", "Detergente Líquido Ype Neutro 500 Ml", 1.99)
         Produto esponja = new Produto("Scoth Brite", "Esponja Limpeza Scoth Brite 3M", 4.50)
@@ -128,18 +128,18 @@ class PedidoUnitSpec extends Specification {
         Cliente clienteCarlos = new Cliente("Carlos", new Date(), "carlos@email.com.br")
         Cliente clienteEduardo = new Cliente("Eduardo", new Date(), "eduardo@email.com.br")
 
-        when:
+        when: "eu efetuo a compra para alguns produtos para um cliente"
         Pedido pedidoClienteCarlos = new Pedido(clienteCarlos)
         pedidoClienteCarlos.comprar(detergente, 4)
         pedidoClienteCarlos.comprar(esponja, 2)
 
-        and:
+        and: "depois eu efetuo a compra para outro cliente"
         Pedido pedidoClienteEduardo = new Pedido(clienteEduardo)
         pedidoClienteEduardo.comprar(sabaoEmPo, 2)
         pedidoClienteEduardo.comprar(detergente, 2)
         pedidoClienteEduardo.comprar(esponja, 1)
 
-        then:
+        then: "devo ter o valor total de acordo com os produtos selecionados para um cliente"
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy")
 
         assert pedidoClienteCarlos.valorTotal == 16.96d
@@ -155,7 +155,7 @@ class PedidoUnitSpec extends Specification {
         assert pedidoClienteCarlos.itensPedido.find { it.produto == esponja }.precoUnitario == 4.50d
         assert pedidoClienteCarlos.itensPedido.find { it.produto == esponja }.quantidade == 2
 
-        and:
+        and: "o valor total de acordo com os produtos selecionados pelo outro cliente"
         assert pedidoClienteEduardo.valorTotal == 62.06d
         assert sdf.format(pedidoClienteEduardo.data) == sdf.format(new Date())
 
